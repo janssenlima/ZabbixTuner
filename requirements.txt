@@ -1,0 +1,2 @@
+zabbix-api>=0.4
+termcolor
