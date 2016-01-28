@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 __author__    = "Janssen dos Reis Lima"
-__version__   = "0.1a"
 
 from zabbix_api import ZabbixAPI
 import os, sys
