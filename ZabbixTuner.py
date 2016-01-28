@@ -6,14 +6,7 @@ __version__   = "0.1a"
 from zabbix_api import ZabbixAPI
 import os, sys
 from termcolor import colored
-
-url = "http://127.0.0.1/zabbix"
-user = "admin"
-password = "zabbix"
-
-zapi = ZabbixAPI(server=url)
-zapi.login(user, password)
-
+from conf.zabbix import *
 
 def banner():
     print colored('''
@@ -24,6 +17,20 @@ def banner():
     /____/\__,_/ /_.___//_.___//_/  /_/|_|      /_/    \__,_/ /_/ /_/\___//_/
     ''', 'red', attrs=['bold'])
     print
+
+try:
+    zapi = ZabbixAPI(server=server, path="", log_level=loglevel)
+    zapi.login(username, password)
+except:
+    os.system('clear')
+    banner()
+    print colored('    Não foi possível conectar ao Zabbix Server.', 'yellow', attrs=['bold'])
+    print u"\n    Verifique se a URL " + colored (server, 'red', attrs=['bold']) + u" está disponível."
+    print
+    print colored('''
+    Desenvolvido por Janssen Lima - janssenlima@conectsys.com.br
+    ''', 'blue', attrs=['bold'])
+    exit(1)
 
 def menu():
     os.system('clear')
