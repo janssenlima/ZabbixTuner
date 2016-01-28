@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Zabbix API
+Zabbix Tuner
 """
 import os
 from setuptools import setup, find_packages, findall
