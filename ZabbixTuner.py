@@ -27,7 +27,7 @@ except:
     print u"\n    Verifique se a URL " + colored (server, 'red', attrs=['bold']) + u" está disponível."
     print
     print colored('''
-    Desenvolvido por Janssen Lima - janssenlima@conectsys.com.br
+    Desenvolvido por Janssen Lima - janssen@conectsys.com.br
     ''', 'blue', attrs=['bold'])
     exit(1)
 
@@ -44,12 +44,9 @@ def menu():
     print "[1] - Relatório de itens do sistema"
     print "[2] - Listar itens não suportados"
     print "[3] - Desabilitar itens não suportados"
-    print "[4] - Relatório da média de coleta dos itens (por tipo) (não implementado)"
-    print "[5] - Iniciar diagnóstico (não implementado)"
+    print "[4] - Relatório da média de coleta dos itens (por tipo)"
+    print "[5] - Iniciar diagnóstico"
     print "[6] - Relatório de Agentes Zabbix desatualizados"
-    print "[7] - ??? (não implementado)"
-    print "[8] - ??? (não implementado)"
-    print "[9] - ??? (não implementado)"
     print
     print "[0] - Sair"
     print
@@ -112,7 +109,7 @@ def agentesDesatualizados():
 
     for x in itens:
         if x['lastvalue'] != versaoZabbixServer:
-            print '{0:6} | {1:30}'.format(x["lastvalue"], x["hosts"][0]["host"])
+            print '{0:6} | {1:30}'.format(x["lastvalue"], x["hosts"][0]["host"])        
     print ""
     raw_input("Pressione ENTER para continuar")     
     main()
@@ -156,7 +153,7 @@ def listagemItensNaoSuportados():
         print colored('{0:5} | {1:30} | {2:40} | {3:10}' .format("Item","Nome", "Error", "Host"), attrs=['bold'])
 
         for x in itensNaoSuportados:
-            print '{0:5} | {1:30} | {2:40} | {3:10}'.format(x["itemid"], x["name"], x["error"], x["hosts"][0]["host"])
+            print u'{0:5} | {1:30} | {2:40} | {3:10}'.format(x["itemid"], x["name"], x["error"], x["hosts"][0]["host"])
         print ""
     else:
         print "Não há dados a exibir"
