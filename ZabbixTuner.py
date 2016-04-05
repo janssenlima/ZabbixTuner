@@ -108,7 +108,7 @@ def agentesDesatualizados():
     print colored('{0:6} | {1:30}' .format("Versão","Host"), attrs=['bold'])
 
     for x in itens:
-        if x['lastvalue'] != versaoZabbixServer:
+        if x['lastvalue'] != versaoZabbixServer and x['lastvalue'] <= versaoZabbixServer:
             print '{0:6} | {1:30}'.format(x["lastvalue"], x["hosts"][0]["host"])        
     print ""
     raw_input("Pressione ENTER para continuar")     
