@@ -180,12 +180,120 @@ def dadosItens():
                                    "countOutput": True
                                    })
 
-    itensDescobertos = zapi.item.get({
-                                    "output": "extend",
+    itensDescobertos = zapi.item.get({"output": "extend",
                                     "selectItemDiscovery": ["itemid"],
-                                    "selectTriggers": ["description"]
+                                    "selectTriggers": ["description"],
+                                    "monitored": True
                                     })
+                                    
+    itensZabbixAgent = zapi.item.get({"output": "extend",
+                               "filter": {"status": 0},
+                                "templated": False,
+                                "countOutput": True
+                                })
 
+    itensSNMPv1 = zapi.item.get({"output": "extend",
+                               "filter": {"status": 1},
+                                "templated": False,
+                                "countOutput": True
+                                })
+
+    itensZabbixTrapper = zapi.item.get({"output": "extend",
+                               "filter": {"status": 2},
+                                "templated": False,
+                                "countOutput": True
+                                })
+                                
+    itensChecagemSimples = zapi.item.get({"output": "extend",
+                               "filter": {"status": 3},
+                                "templated": False,
+                                "countOutput": True
+                                })                                
+
+    itensSNMPv2 = zapi.item.get({"output": "extend",
+                               "filter": {"status": 4},
+                                "templated": False,
+                                "countOutput": True
+                                })
+                                
+    itensZabbixInterno = zapi.item.get({"output": "extend",
+                               "filter": {"status": 5},
+                                "templated": False,
+                                "countOutput": True
+                                })
+
+    itensSNMPv3 = zapi.item.get({"output": "extend",
+                               "filter": {"status": 6},
+                                "templated": False,
+                                "countOutput": True
+                                })
+
+    itensZabbixAgentAtivo = zapi.item.get({"output": "extend",
+                               "filter": {"status": 7},
+                                "templated": False,
+                                "countOutput": True
+                                })
+
+    itensZabbixAggregate = zapi.item.get({"output": "extend",
+                               "filter": {"status": 8},
+                                "templated": False,
+                                "countOutput": True
+                                })
+
+    itensWeb = zapi.item.get({"output": "extend",
+                               "filter": {"status": 9},
+                                "templated": False,
+                                "webitems": True,
+                                "countOutput": True
+                                })
+
+    itensExterno = zapi.item.get({"output": "extend",
+                               "filter": {"status": 10},
+                                "templated": False,
+                                "countOutput": True
+                                })
+
+    itensDatabase = zapi.item.get({"output": "extend",
+                               "filter": {"status": 11},
+                                "templated": False,
+                                "countOutput": True
+                                })
+
+    itensIPMI = zapi.item.get({"output": "extend",
+                               "filter": {"status": 12},
+                                "templated": False,
+                                "countOutput": True
+                                })
+
+    itensSSH = zapi.item.get({"output": "extend",
+                               "filter": {"status": 13},
+                                "templated": False,
+                                "countOutput": True
+                                })
+
+    itensTelnet = zapi.item.get({"output": "extend",
+                               "filter": {"status": 14},
+                                "templated": False,
+                                "countOutput": True
+                                })
+
+    itensCalculado = zapi.item.get({"output": "extend",
+                               "filter": {"status": 15},
+                                "templated": False,
+                                "countOutput": True
+                                })
+
+    itensJMX = zapi.item.get({"output": "extend",
+                               "filter": {"status": 16},
+                                "templated": False,
+                                "countOutput": True
+                                })
+
+    itensSNMPTrap = zapi.item.get({"output": "extend",
+                               "filter": {"status": 17},
+                                "templated": False,
+                                "countOutput": True
+                                })                                
     cont = 0
     for i in itensDescobertos:
         if i["itemDiscovery"]:
@@ -202,9 +310,29 @@ def dadosItens():
         print colored("[ERRO]",'red'), "Itens não suportados: ", itensNaoSuportados
     else:
         print colored("[-OK-]",'green'), "Itens não suportados: ", itensNaoSuportados
-    print colored("[INFO]",'blue'), "Itens descobertos: ", cont
+    #print colored("[INFO]",'blue'), "Itens descobertos: ", cont
     print ""
-    raw_input("Pressione ENTER para continuar")
+    print "Itens por tipo"
+    print colored("[INFO]",'blue'), "Itens Zabbix Agent (passivo): ", itensZabbixAgent
+    print colored("[INFO]",'blue'), "Itens Zabbix Agent (ativo): ", itensZabbixAgentAtivo
+    print colored("[INFO]",'blue'), "Itens Zabbix Trapper: ", itensZabbixTrapper
+    print colored("[INFO]",'blue'), "Itens Zabbix Interno: ", itensZabbixInterno
+    print colored("[INFO]",'blue'), "Itens Zabbix Agregado: ", itensZabbixAggregate
+    print colored("[INFO]",'blue'), "Itens SNMPv1: ", itensSNMPv1
+    print colored("[INFO]",'blue'), "Itens SNMPv2: ", itensSNMPv2
+    print colored("[INFO]",'blue'), "Itens SNMPv3: ", itensSNMPv3
+    print colored("[INFO]",'blue'), "Itens SNMNP Trap: ", itensSNMPTrap
+    print colored("[INFO]",'blue'), "Itens JMX: ", itensJMX
+    print colored("[INFO]",'blue'), "Itens IPMI: ", itensIPMI
+    print colored("[INFO]",'blue'), "Itens SSH: ", itensSSH
+    print colored("[INFO]",'blue'), "Itens Telnet: ", itensTelnet
+    print colored("[INFO]",'blue'), "Itens Web: ", itensWeb
+    print colored("[INFO]",'blue'), "Itens Checagem Simples: ", itensChecagemSimples
+    print colored("[INFO]",'blue'), "Itens Calculado: ", itensCalculado
+    print colored("[INFO]",'blue'), "Itens Checagem Externa: ", itensExterno
+    print colored("[INFO]",'blue'), "Itens Database: ", itensDatabase
+    print ""
+    raw_input("Pressione ENTER para continuar")    
     main()
 
 
