@@ -189,110 +189,128 @@ def dadosItens():
     itensZabbixAgent = zapi.item.get({"output": "extend",
                                "filter": {"type": 0},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensSNMPv1 = zapi.item.get({"output": "extend",
                                "filter": {"type": 1},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensZabbixTrapper = zapi.item.get({"output": "extend",
                                "filter": {"type": 2},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
                                 
     itensChecagemSimples = zapi.item.get({"output": "extend",
                                "filter": {"type": 3},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })                                
 
     itensSNMPv2 = zapi.item.get({"output": "extend",
                                "filter": {"type": 4},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
                                 
     itensZabbixInterno = zapi.item.get({"output": "extend",
                                "filter": {"type": 5},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensSNMPv3 = zapi.item.get({"output": "extend",
                                "filter": {"type": 6},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensZabbixAgentAtivo = zapi.item.get({"output": "extend",
                                "filter": {"type": 7},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensZabbixAggregate = zapi.item.get({"output": "extend",
                                "filter": {"type": 8},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensWeb = zapi.item.get({"output": "extend",
                                "filter": {"type": 9},
                                 "templated": False,
                                 "webitems": True,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensExterno = zapi.item.get({"output": "extend",
                                "filter": {"type": 10},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensDatabase = zapi.item.get({"output": "extend",
                                "filter": {"type": 11},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensIPMI = zapi.item.get({"output": "extend",
                                "filter": {"type": 12},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensSSH = zapi.item.get({"output": "extend",
                                "filter": {"type": 13},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensTelnet = zapi.item.get({"output": "extend",
                                "filter": {"type": 14},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensCalculado = zapi.item.get({"output": "extend",
                                "filter": {"type": 15},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensJMX = zapi.item.get({"output": "extend",
                                "filter": {"type": 16},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })
 
     itensSNMPTrap = zapi.item.get({"output": "extend",
                                "filter": {"type": 17},
                                 "templated": False,
-                                "countOutput": True
+                                "countOutput": True,
+                                "monitored": True
                                 })                                
     cont = 0
     for i in itensDescobertos:
@@ -312,7 +330,7 @@ def dadosItens():
         print colored("[-OK-]",'green'), "Itens não suportados: ", itensNaoSuportados
     #print colored("[INFO]",'blue'), "Itens descobertos: ", cont
     print ""
-    print "Itens por tipo"
+    print "Itens por tipo em monitoramento"
     print "=" * 14
     print colored("[INFO]",'blue'), "Itens Zabbix Agent (passivo): ", itensZabbixAgent
     print colored("[INFO]",'blue'), "Itens Zabbix Agent (ativo): ", itensZabbixAgentAtivo
