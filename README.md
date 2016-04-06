@@ -2,6 +2,8 @@
 
 ZabbixTuner é um projeto que utiliza a API do Zabbix que tem como objetivo verificar uma instalação do Zabbix e propor ajustes para melhorar a performance e a estabilidade do sistema.
 
+![VIS_SAMPLE] (https://asciinema.org/a/2ffakm0mxs70i6ipko5jmyt63)
+
 ## Instalação
 
 ```sh
