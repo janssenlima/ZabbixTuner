@@ -27,3 +27,6 @@ $ vim conf/zabbix.py
 ```sh
 $ ./ZabbixTuner.py
 ```
+
+## Quer ajudar no projeto?
+Achou algum erro ou quer fazer uma sugestão para o projeto? Cadastre uma Issue aqui mesmo no GitHub ou envie um e-mail para janssen@conectsys.com.br
