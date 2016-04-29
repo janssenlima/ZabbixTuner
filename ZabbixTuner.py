@@ -37,7 +37,7 @@ def menu():
     print colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n" 
     "[+] - Zabbix Tuner faz um diagnóstico do seu ambiente e propõe melhorias na busca de um melhor desempenho - [+]\n"
     "[+] - Desenvolvido por Janssen Lima - [+]\n"
-    "[+] - Dúvidas/Sugestões envie e-mal para janssen@conectsys.com.br - [+]", 'blue')
+    "[+] - Dúvidas/Sugestões envie e-mail para janssen@conectsys.com.br - [+]", 'blue')
     print
     print colored("--- Escolha uma opção do menu ---",'yellow', attrs=['bold'])
     print
