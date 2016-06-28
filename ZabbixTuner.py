@@ -53,7 +53,7 @@ def menu():
     menu_opcao()
 
 def menu_opcao():
-    opcao = raw_input( "[+] - Selecione uma opção[0-9]: ")
+    opcao = raw_input( "[+] - Selecione uma opção[0-6]: ")
     if opcao == '1':
         dadosItens()
     elif opcao == '2':
