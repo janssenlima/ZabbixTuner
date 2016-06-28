@@ -99,20 +99,24 @@ def agentesDesatualizados():
                             "sortorder": "ASC"
     })
     
-    versaoZabbixServer = zapi.item.get ({
-                            "filter": {"key_": "agent.version"},
-                            "output": ["lastvalue", "hostid"],
-                            "hostids": "10084"
-    })[0]["lastvalue"]
+    try:
+        versaoZabbixServer = zapi.item.get ({
+                                "filter": {"key_": "agent.version"},
+                                "output": ["lastvalue", "hostid"],
+                                "hostids": "10084"
+                                })[0]["lastvalue"]
     
-    print colored('{0:6} | {1:30}' .format("Versão","Host"), attrs=['bold'])
+        print colored('{0:6} | {1:30}' .format("Versão","Host"), attrs=['bold'])
 
-    for x in itens:
-        if x['lastvalue'] != versaoZabbixServer and x['lastvalue'] <= versaoZabbixServer:
-            print '{0:6} | {1:30}'.format(x["lastvalue"], x["hosts"][0]["host"])        
-    print ""
-    raw_input("Pressione ENTER para continuar")     
-    main()
+        for x in itens:
+            if x['lastvalue'] != versaoZabbixServer and x['lastvalue'] <= versaoZabbixServer:
+                print '{0:6} | {1:30}'.format(x["lastvalue"], x["hosts"][0]["host"])        
+                print ""
+                raw_input("Pressione ENTER para continuar")     
+                main()
+    
+    except IndexError:
+        print "Não foi possível obter a versão do agent no Zabbix Server."
     
 def diagnosticoAmbiente():
     print colored("[+++]", 'green'), "analisando itens não númericos"
