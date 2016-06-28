@@ -117,6 +117,8 @@ def agentesDesatualizados():
     
     except IndexError:
         print "Não foi possível obter a versão do agent no Zabbix Server."
+        raw_input("Pressione ENTER para continuar")     
+        main()
     
 def diagnosticoAmbiente():
     print colored("[+++]", 'green'), "analisando itens não númericos"
@@ -184,11 +186,14 @@ def dadosItens():
                                    "countOutput": True
                                    })
 
+    """
+    VERIFICAR PROBLEMA NESTA REQUISICAO
     itensDescobertos = zapi.item.get({"output": "extend",
                                     "selectItemDiscovery": ["itemid"],
                                     "selectTriggers": ["description"],
                                     "monitored": True
                                     })
+    """
                                     
     itensZabbixAgent = zapi.item.get({"output": "extend",
                                "filter": {"type": 0},
@@ -316,10 +321,13 @@ def dadosItens():
                                 "countOutput": True,
                                 "monitored": True
                                 })                                
+    """
+    COMENTADO ATE RESOLVER O PROBLEMA NA REQUISICAO DOS ITENS DE DISCOVERY
     cont = 0
     for i in itensDescobertos:
         if i["itemDiscovery"]:
             cont += 1
+    """
 
     print ""
     print "Relatório de itens"
