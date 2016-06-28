@@ -169,7 +169,7 @@ def listagemItensNaoSuportados():
 
 def dadosItens():
     itensNaoSuportados = zapi.item.get({"output": "extend",
-                              "filter": {"state": 1,"status":0},
+                              "filter": {"state": 1,"status": 0},
                               "monitored": True,
                               "countOutput": True                           
                               })
@@ -181,7 +181,7 @@ def dadosItens():
                                          })
 
     itensDesabilitados = zapi.item.get({"output": "extend",
-                                   "filter": {"status": 1},
+                                   "filter": {"status": 1, "flags": 0},
                                    "templated": False,
                                    "countOutput": True
                                    })
