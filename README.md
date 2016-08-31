@@ -7,7 +7,7 @@ ZabbixTuner é um projeto que utiliza a API do Zabbix que tem como objetivo veri
 ## Instalação
 
 ```sh
-$ sudo apt-get install pip git
+$ sudo apt-get install python-pip git
 
 $ git clone https://github.com/janssenlima/ZabbixTuner
 $ cd ZabbixTuner
