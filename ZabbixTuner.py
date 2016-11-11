@@ -70,25 +70,41 @@ def menu_opcao():
         menu()
 
 def desabilitaItensNaoSuportados():
-	opcao = raw_input( "Confirma operação? [s/n]")
-	if opcao == 's' or opcao == 'S':
-		itens = zapi.item.get({
+	query = {
 			"output": "extend",
 			"filter": {
 				"state": 1
 			},
 			"monitored": True
-		})
-		
+		}
+
+	filtro = raw_input('Qual a busca para key_? [NULL = ENTER] ')
+	if filtro.__len__() > 0:
+		query['search']={'key_': filtro}
+
+	limite = raw_input('Qual o limite de itens? [NULL = ENTER] ')
+	if limite.__len__() > 0:
+		try:
+			query['limit']=int(limite)
+		except:
+			print 'Limite invalido'
+			raw_input("Pressione ENTER para voltar")
+			main()
+
+	opcao = raw_input("Confirma operação? [s/n]")
+	if opcao == 's' or opcao == 'S':
+		itens = zapi.item.get(query)
+		print 'Encontramos {} itens'.format(itens.__len__())
+		bar = ProgressBar(maxval=itens.__len__(),widgets=[Percentage(), ReverseBar(), ETA(), RotatingMarker(), Timer()]).start()
+		i = 0
 		for x in itens:
-			zapi.item.update({
-				"itemid": x['itemid'], "status":1
-			})
+			result = zapi.item.update({"itemid": x['itemid'], "status": 1})
+			i += 1
+			bar.update(i)
+		bar.finish()
 		print "Itens desabilitados!!!"
 		raw_input("Pressione ENTER para continuar")
-		main()
-	else:
-		main()		
+	main()
 
 def agentesDesatualizados():
     itens = zapi.item.get ({
