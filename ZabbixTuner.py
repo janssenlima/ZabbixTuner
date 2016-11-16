@@ -5,6 +5,7 @@ __author__    = "Janssen dos Reis Lima"
 from zabbix_api import ZabbixAPI
 import os, sys
 from termcolor import colored
+from progressbar import ProgressBar, Percentage, ReverseBar, ETA, Timer, RotatingMarker
 from conf.zabbix import *
 
 def banner():
