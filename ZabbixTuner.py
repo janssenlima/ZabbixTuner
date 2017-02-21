@@ -4,6 +4,8 @@ __author__    = "Janssen dos Reis Lima"
 
 from zabbix_api import ZabbixAPI
 import os, sys
+import datetime
+import time
 from termcolor import colored
 from progressbar import ProgressBar, Percentage, ReverseBar, ETA, Timer, RotatingMarker
 from conf.zabbix import *
@@ -16,45 +18,46 @@ def banner():
     _  /__/ /_/ /_  /_/ /  /_/ /  / __>  <      _  /   / /_/ /_  / / /  __/  /
     /____/\__,_/ /_.___//_.___//_/  /_/|_|      /_/    \__,_/ /_/ /_/\___//_/
     ''', 'red', attrs=['bold'])
-    print
+    print "" 
 
 try:
-    zapi = ZabbixAPI(server=server, path="", log_level=loglevel)
+    zapi = ZabbixAPI(server=server, path="", timeout=timeout ,log_level=loglevel)
     zapi.login(username, password)
 except:
     os.system('clear')
     banner()
     print colored('    Não foi possível conectar ao Zabbix Server.', 'yellow', attrs=['bold'])
     print u"\n    Verifique se a URL " + colored (server, 'red', attrs=['bold']) + u" está disponível."
-    print
+    print ""
     print colored('''
     Desenvolvido por Janssen Lima - janssen@conectsys.com.br
     ''', 'blue', attrs=['bold'])
-    exit(1)
+    exit(0)
 
 def menu():
     os.system('clear')
     banner()
-    print colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n" 
+    print colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n"
     "[+] - Zabbix Tuner faz um diagnóstico do seu ambiente e propõe melhorias na busca de um melhor desempenho - [+]\n"
     "[+] - Desenvolvido por Janssen Lima - [+]\n"
     "[+] - Dúvidas/Sugestões envie e-mail para janssen@conectsys.com.br - [+]", 'blue')
-    print
+    print ""
     print colored("--- Escolha uma opção do menu ---",'yellow', attrs=['bold'])
-    print
+    print ""
     print "[1] - Relatório de itens do sistema"
     print "[2] - Listar itens não suportados"
     print "[3] - Desabilitar itens não suportados"
     print "[4] - Relatório da média de coleta dos itens (por tipo)"
     print "[5] - Iniciar diagnóstico"
     print "[6] - Relatório de Agentes Zabbix desatualizados"
-    print
+    print "[7] - Relatório de Triggers por tempo de alarme e estado"
+    print ""
     print "[0] - Sair"
-    print
+    print ""
     menu_opcao()
 
 def menu_opcao():
-    opcao = raw_input( "[+] - Selecione uma opção[0-6]: ")
+    opcao = raw_input( "[+] - Selecione uma opção[0-7]: ")
     if opcao == '1':
         dadosItens()
     elif opcao == '2':
@@ -65,6 +68,8 @@ def menu_opcao():
         diagnosticoAmbiente()
     elif opcao == '6':
         agentesDesatualizados()
+    elif opcao == '7':
+        menu_relack()
     elif opcao == '0':
         sys.exit()
     else:
@@ -383,8 +388,138 @@ def dadosItens():
     raw_input("Pressione ENTER para continuar")    
     main()
 
+def menu_relack():
+    os.system('clear')
+    banner()
+    print colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n" 
+    "[+] - Zabbix Tuner faz um diagnóstico do seu ambiente e propõe melhorias na busca de um melhor desempenho - [+]\n"
+    "[+] - Desenvolvido por Janssen Lima - [+]\n"
+    "[+] - Dúvidas/Sugestões envie e-mail para janssen@conectsys.com.br - [+]", 'blue')
+    print ""
+    print colored("--- Escolha uma opção para o relatório ---",'yellow', attrs=['bold'])
+    print ""
+    print "[1] - Relatório de triggers com Acknowledged"
+    print "[2] - Relatório de triggers com Unacknowledged"
+    print "[3] - Relatório de triggers com ACK/UNACK"
+    print ""
+    menu_opcao_relack()
+
+def menu_opcao_relack():
+
+    opcao = raw_input( "[+] - Selecione uma opção[1-3]: ")
+
+    if opcao == '1':
+        rel_ack = zapi.trigger.get({"output": ["triggerid","lastchange","comments"],
+                            "withAcknowledgedEvents": True })
+
+        tmp_trigger = int(raw_input( "[+] - Selecione qual o tempo de alarme (dias): "))
+        comparacao = raw_input( "[+] - Deseja ver Triggers com mais ou menos de {0} dias [ + / - ] ? ".format(tmp_trigger))
+        hoje = datetime.date.today()
+        dt = (hoje - datetime.timedelta(days=tmp_trigger))
+        conversao = int(time.mktime(dt.timetuple()))
+        if comparacao == '-':
+            for relatorio in rel_ack :
+
+                if conversao >= int(relatorio["lastchange"]) :
+                    print ""
+                    print colored("[-OK-]",'green'), "Trigger com status Acknowledged com menos de {0} dias".format(tmp_trigger)
+                    print "=" * 80
+                    print ""
+                    print colored("[INFO]",'blue'), "Descrição da Trigger: ", relatorio["comments"]
+                    print colored("[INFO]",'blue'), "Tempo de alarme: ", relatorio["lastchange"]
+                    print colored("[INFO]",'blue'), "ID da trigger: ", relatorio["triggerid"]
+                    print ""
+        else:
+            for relatorio in rel_ack :
+                if conversao <= int(relatorio["lastchange"]) :
+                    print ""
+                    print colored("[ATENÇÃO]",'red'), "Trigger com status Acknowledged com mais de {0} dias".format(tmp_trigger)
+                    print "=" * 80
+                    print ""
+                    print colored("[INFO]",'blue'), "Descrição da Trigger: ", relatorio["comments"]
+                    print colored("[INFO]",'blue'), "Tempo de alarme: ", relatorio["lastchange"]
+                    print colored("[INFO]",'blue'), "ID da trigger: ", relatorio["triggerid"]
+                    print ""
+
+        raw_input("Pressione ENTER para continuar")  
+        main()
+
+    if opcao == '2':
+        rel_ack = zapi.trigger.get({"output": ["triggerid","lastchange","comments"],
+                            "withUnacknowledgedEvents": True })
+
+        tmp_trigger = int(raw_input( "[+] - Selecione qual o tempo de alarme (dias): "))
+        comparacao = raw_input( "[+] - Deseja ver Triggers com mais ou menos de {0} dias [ + / - ] ? ".format(tmp_trigger))
+        hoje = datetime.date.today()
+        dt = (hoje - datetime.timedelta(days=tmp_trigger))
+        conversao = int(time.mktime(dt.timetuple()))
+        if comparacao == '-':
+            for relatorio in rel_ack :
+
+                if conversao >= int(relatorio["lastchange"]) :
+                    print ""
+                    print colored("[-OK-]",'green'), "Trigger com status Unacknowledged com menos de {0} dias".format(tmp_trigger)
+                    print "=" * 80
+                    print ""
+                    print colored("[INFO]",'blue'), "Descrição da Trigger: ", relatorio["comments"]
+                    print colored("[INFO]",'blue'), "Tempo de alarme: ", relatorio["lastchange"]
+                    print colored("[INFO]",'blue'), "ID da trigger: ", relatorio["triggerid"]
+                    print ""
+        else:
+            for relatorio in rel_ack :
+                if conversao <= int(relatorio["lastchange"]) :
+                    print ""
+                    print colored("[ATENÇÃO]",'red'), "Trigger com status Unacknowledged com mais de {0} dias".format(tmp_trigger)
+                    print "=" * 80
+                    print ""
+                    print colored("[INFO]",'blue'), "Descrição da Trigger: ", relatorio["comments"]
+                    print colored("[INFO]",'blue'), "Tempo de alarme: ", relatorio["lastchange"]
+                    print colored("[INFO]",'blue'), "ID da trigger: ", relatorio["triggerid"]
+                    print ""
+        raw_input("Pressione ENTER para continuar")  
+        main()
+    
+    if opcao == '3':
+        rel_ack = zapi.trigger.get({"output": ["triggerid","lastchange","comments"]})
+
+        tmp_trigger = int(raw_input( "[+] - Selecione qual o tempo de alarme (dias): "))
+        comparacao = raw_input( "[+] - Deseja ver Triggers com mais ou menos de {0} dias [ + / - ] ? ".format(tmp_trigger))
+        hoje = datetime.date.today()
+        dt = (hoje - datetime.timedelta(days=tmp_trigger))
+        conversao = int(time.mktime(dt.timetuple()))
+        if comparacao == '-':
+            for relatorio in rel_ack :
+
+                if conversao >= int(relatorio["lastchange"]) :
+                    print ""
+                    print colored("[-OK-]",'green'), "Trigger com status ACK/UNACK com menos de {0} dias".format(tmp_trigger)
+                    print "=" * 80
+                    print ""
+                    print colored("[INFO]",'blue'), "Descrição da Trigger: ", relatorio["comments"]
+                    print colored("[INFO]",'blue'), "Tempo de alarme: ", relatorio["lastchange"]
+                    print colored("[INFO]",'blue'), "ID da trigger: ", relatorio["triggerid"]
+                    print ""
+        else:
+            for relatorio in rel_ack :
+                if conversao <= int(relatorio["lastchange"]) :
+                    print ""
+                    print colored("[ATENÇÃO]",'red'), "Trigger com status ACK/UNACK com mais de {0} dias".format(tmp_trigger)
+                    print "=" * 80
+                    print ""
+                    print colored("[INFO]",'blue'), "Descrição da Trigger: ", relatorio["comments"]
+                    print colored("[INFO]",'blue'), "Tempo de alarme: ", relatorio["lastchange"]
+                    print colored("[INFO]",'blue'), "ID da trigger: ", relatorio["triggerid"]
+                    print ""
+
+        raw_input("Pressione ENTER para continuar")
+        main()
+
+    else:
+        menu_relack()
 
 def main():
     menu()
 
-main()
+main()    
+
+
