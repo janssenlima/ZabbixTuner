@@ -1,11 +1,12 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
+#coding: utf-8
 __author__    = "Janssen dos Reis Lima"
 
 from zabbix_api import ZabbixAPI
 import os, sys
 import datetime
 import time
+import csv
 from termcolor import colored
 from progressbar import ProgressBar, Percentage, ReverseBar, ETA, Timer, RotatingMarker
 from conf.zabbix import *
@@ -402,11 +403,13 @@ def menu_relack():
     print "[2] - Relatório de triggers com Unacknowledged"
     print "[3] - Relatório de triggers com ACK/UNACK"
     print ""
+    print "[0] - Sair"
+    print ""
     menu_opcao_relack()
 
 def menu_opcao_relack():
 
-    opcao = raw_input( "[+] - Selecione uma opção[1-3]: ")
+    opcao = raw_input( "[+] - Selecione uma opção[0-3]: ")
 
     params = {'output': ['triggerid','lastchange','comments','description'], 'expandDescription': True, 'only_true': True, 'active': True}
     if opcao == '1':
@@ -417,6 +420,8 @@ def menu_opcao_relack():
         label = 'UNACK'
     elif opcao == '3':
         label = 'ACK/UNACK'
+    elif opcao == '0':
+        main()
     else:
         raw_input("\nPressione ENTER para voltar")
         menu_relack()
@@ -453,8 +458,25 @@ def menu_opcao_relack():
         print ""
 
     print colored("\n[INFO]",'green'), "Total de {} triggers encontradas".format(rel_ack.__len__())
-    raw_input("Pressione ENTER para continuar")
-    main()
+    opcao = raw_input("\nDeseja gerar relatorio em arquivo? [s/n]")
+    if opcao == 's' or opcao == 'S':
+        arquivo = open("relatorio.csv", "wb")
+        for relatorio in rel_ack:
+            arquivo.write("Trigger {} com {} de {} dias\n".format(label,operador,tmp_trigger))
+            arquivo.write("=" * 80)
+            arquivo.write("\nNome da Trigger: ")
+            arquivo.write(relatorio["description"])
+            arquivo.write("\nHora de alarme: " )
+            arquivo.write(lastchangeConverted)
+            arquivo.write("\nURL da trigger: {}/zabbix.php?action=problem.view&filter_set=1&filter_triggerids%5B%5D={}".format(server,relatorio["triggerid"]))
+            arquivo.write("\nDescrição da Trigger: ")
+            arquivo.write((relatorio["comments"]).encode('utf-8'))
+        
+        raw_input("\nArquivo gerado com sucesso ! Pressione ENTER para voltar")
+        menu_relack()
+    else:   
+        raw_input("\nPressione ENTER para voltar")
+        menu_relack()
 
 def main():
     menu()
