@@ -3,7 +3,8 @@
 __author__    = "Janssen dos Reis Lima"
 
 from zabbix_api import ZabbixAPI
-import os, sys
+import os, sys 
+#from os import *
 import datetime
 import time
 import csv
@@ -460,18 +461,18 @@ def menu_opcao_relack():
     print colored("\n[INFO]",'green'), "Total de {} triggers encontradas".format(rel_ack.__len__())
     opcao = raw_input("\nDeseja gerar relatorio em arquivo? [s/n]")
     if opcao == 's' or opcao == 'S':
-        arquivo = open("relatorio.csv", "wb")
-        for relatorio in rel_ack:
-            arquivo.write("Trigger {} com {} de {} dias\n".format(label,operador,tmp_trigger))
-            arquivo.write("=" * 80)
-            arquivo.write("\nNome da Trigger: ")
-            arquivo.write(relatorio["description"])
-            arquivo.write("\nHora de alarme: " )
-            arquivo.write(lastchangeConverted)
-            arquivo.write("\nURL da trigger: {}/zabbix.php?action=problem.view&filter_set=1&filter_triggerids%5B%5D={}".format(server,relatorio["triggerid"]))
-            arquivo.write("\nDescrição da Trigger: ")
-            arquivo.write((relatorio["comments"]).encode('utf-8'))
-        
+        with open("relatorio.csv" ,"w") as arquivo:
+            arquivo.write("Nome da Trigger,Hora de alarme:,URL da trigger:,Descrição da Trigger:\r\n ")
+            for relatorio in rel_ack:
+                arquivo.write(relatorio["description"])
+                arquivo.write(",")
+                arquivo.write(lastchangeConverted)
+                arquivo.write(",")
+                arquivo.write("{}/zabbix.php?action=problem.view&filter_set=1&filter_triggerids%5B%5D={}".format(server,relatorio["triggerid"]))
+                arquivo.write(",")
+                arquivo.write("\""+relatorio["comments"]+"\"")
+                arquivo.write("\r\n")
+
         raw_input("\nArquivo gerado com sucesso ! Pressione ENTER para voltar")
         menu_relack()
     else:   
