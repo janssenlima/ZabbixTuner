@@ -470,7 +470,7 @@ def menu_opcao_relack():
                 arquivo.write(",")
                 arquivo.write("{}/zabbix.php?action=problem.view&filter_set=1&filter_triggerids%5B%5D={}".format(server,relatorio["triggerid"]))
                 arquivo.write(",")
-                arquivo.write("\""+relatorio["comments"]+"\"")
+                arquivo.write(("\""+relatorio["comments"]+"\"").encode('utf-8'))
                 arquivo.write("\r\n")
 
         raw_input("\nArquivo gerado com sucesso ! Pressione ENTER para voltar")
