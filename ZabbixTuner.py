@@ -464,7 +464,7 @@ def menu_opcao_relack():
         with open("relatorio.csv" ,"w") as arquivo:
             arquivo.write("Nome da Trigger,Hora de alarme:,URL da trigger:,Descrição da Trigger:\r\n ")
             for relatorio in rel_ack:
-                arquivo.write(relatorio["description"])
+                arquivo.write((relatorio["description"]).encode('utf-8'))
                 arquivo.write(",")
                 arquivo.write(lastchangeConverted)
                 arquivo.write(",")
