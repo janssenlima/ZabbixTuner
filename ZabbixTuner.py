@@ -412,7 +412,7 @@ def menu_opcao_relack():
 
     opcao = raw_input( "[+] - Selecione uma opção[0-3]: ")
 
-    params = {'output': ['triggerid','lastchange','comments','description'], 'expandDescription': True, 'only_true': True, 'active': True}
+    params = {'output': ['triggerid','lastchange','comments','description'],'selectHosts':['hostid', 'host'], 'expandDescription': True, 'only_true': True, 'active': True}
     if opcao == '1':
         params['withAcknowledgedEvents'] = True
         label = 'ACK'
@@ -452,7 +452,7 @@ def menu_opcao_relack():
         print colored("[-PROBLEM-]",'red'), "Trigger {} com {} de {} dias".format(label,operador,tmp_trigger)
         print "=" * 80
         print ""
-        print colored("[INFO]",'blue'), "Nome da Trigger: ", relatorio["description"]
+        print colored("[INFO]",'blue'), "Nome da Trigger: ", relatorio["description"],"| HOST:"+relatorio["hosts"][0]["host"]+" | ID:"+relatorio["hosts"][0]["hostid"]
         print colored("[INFO]",'blue'), "Hora de alarme: ", lastchangeConverted
         print colored("[INFO]",'blue'), "URL da trigger: {}/zabbix.php?action=problem.view&filter_set=1&filter_triggerids%5B%5D={}".format(server,relatorio["triggerid"])
         print colored("[INFO]",'blue'), "Descrição da Trigger: ", relatorio["comments"]
@@ -465,6 +465,7 @@ def menu_opcao_relack():
             arquivo.write("Nome da Trigger,Hora de alarme:,URL da trigger:,Descrição da Trigger:\r\n ")
             for relatorio in rel_ack:
                 arquivo.write((relatorio["description"]).encode('utf-8'))
+                arquivo.write(("| HOST:"+relatorio["hosts"][0]["host"]+" | ID:"+relatorio["hosts"][0]["hostid"]))
                 arquivo.write(",")
                 arquivo.write(lastchangeConverted)
                 arquivo.write(",")
