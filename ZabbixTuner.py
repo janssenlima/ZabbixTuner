@@ -1,9 +1,13 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
+#coding: utf-8
 __author__    = "Janssen dos Reis Lima"
 
 from zabbix_api import ZabbixAPI
-import os, sys
+import os, sys 
+#from os import *
+import datetime
+import time
+import csv
 from termcolor import colored
 from progressbar import ProgressBar, Percentage, ReverseBar, ETA, Timer, RotatingMarker
 from conf.zabbix import *
@@ -16,45 +20,46 @@ def banner():
     _  /__/ /_/ /_  /_/ /  /_/ /  / __>  <      _  /   / /_/ /_  / / /  __/  /
     /____/\__,_/ /_.___//_.___//_/  /_/|_|      /_/    \__,_/ /_/ /_/\___//_/
     ''', 'red', attrs=['bold'])
-    print
+    print "" 
 
 try:
-    zapi = ZabbixAPI(server=server, path="", log_level=loglevel)
+    zapi = ZabbixAPI(server=server, path="", timeout=timeout ,log_level=loglevel)
     zapi.login(username, password)
 except:
     os.system('clear')
     banner()
     print colored('    Não foi possível conectar ao Zabbix Server.', 'yellow', attrs=['bold'])
     print u"\n    Verifique se a URL " + colored (server, 'red', attrs=['bold']) + u" está disponível."
-    print
+    print ""
     print colored('''
     Desenvolvido por Janssen Lima - janssen@conectsys.com.br
     ''', 'blue', attrs=['bold'])
-    exit(1)
+    exit(0)
 
 def menu():
     os.system('clear')
     banner()
-    print colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n" 
+    print colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n"
     "[+] - Zabbix Tuner faz um diagnóstico do seu ambiente e propõe melhorias na busca de um melhor desempenho - [+]\n"
     "[+] - Desenvolvido por Janssen Lima - [+]\n"
     "[+] - Dúvidas/Sugestões envie e-mail para janssen@conectsys.com.br - [+]", 'blue')
-    print
+    print ""
     print colored("--- Escolha uma opção do menu ---",'yellow', attrs=['bold'])
-    print
+    print ""
     print "[1] - Relatório de itens do sistema"
     print "[2] - Listar itens não suportados"
     print "[3] - Desabilitar itens não suportados"
     print "[4] - Relatório da média de coleta dos itens (por tipo)"
     print "[5] - Iniciar diagnóstico"
     print "[6] - Relatório de Agentes Zabbix desatualizados"
-    print
+    print "[7] - Relatório de Triggers por tempo de alarme e estado"
+    print ""
     print "[0] - Sair"
-    print
+    print ""
     menu_opcao()
 
 def menu_opcao():
-    opcao = raw_input( "[+] - Selecione uma opção[0-6]: ")
+    opcao = raw_input( "[+] - Selecione uma opção[0-7]: ")
     if opcao == '1':
         dadosItens()
     elif opcao == '2':
@@ -65,6 +70,8 @@ def menu_opcao():
         diagnosticoAmbiente()
     elif opcao == '6':
         agentesDesatualizados()
+    elif opcao == '7':
+        menu_relack()
     elif opcao == '0':
         sys.exit()
     else:
@@ -383,6 +390,95 @@ def dadosItens():
     raw_input("Pressione ENTER para continuar")    
     main()
 
+def menu_relack():
+    os.system('clear')
+    banner()
+    print colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n" 
+    "[+] - Zabbix Tuner faz um diagnóstico do seu ambiente e propõe melhorias na busca de um melhor desempenho - [+]\n"
+    "[+] - Desenvolvido por Janssen Lima - [+]\n"
+    "[+] - Dúvidas/Sugestões envie e-mail para janssen@conectsys.com.br - [+]", 'blue')
+    print ""
+    print colored("--- Escolha uma opção para o relatório ---",'yellow', attrs=['bold'])
+    print ""
+    print "[1] - Relatório de triggers com Acknowledged"
+    print "[2] - Relatório de triggers com Unacknowledged"
+    print "[3] - Relatório de triggers com ACK/UNACK"
+    print ""
+    print "[0] - Sair"
+    print ""
+    menu_opcao_relack()
+
+def menu_opcao_relack():
+
+    opcao = raw_input( "[+] - Selecione uma opção[0-3]: ")
+
+    params = {'output': ['triggerid','lastchange','comments','description'],'selectHosts':['hostid', 'host'], 'expandDescription': True, 'only_true': True, 'active': True}
+    if opcao == '1':
+        params['withAcknowledgedEvents'] = True
+        label = 'ACK'
+    elif opcao == '2':
+        params['withUnacknowledgedEvents'] = True
+        label = 'UNACK'
+    elif opcao == '3':
+        label = 'ACK/UNACK'
+    elif opcao == '0':
+        main()
+    else:
+        raw_input("\nPressione ENTER para voltar")
+        menu_relack()
+
+    hoje = datetime.date.today()
+    try:
+        tmp_trigger = int(raw_input( "[+] - Selecione qual o tempo de alarme (dias): "))
+    except Exception, e:
+        raw_input("\nPressione ENTER para voltar")
+        menu_relack()
+    dt = (hoje - datetime.timedelta(days=tmp_trigger))
+    conversao = int(time.mktime(dt.timetuple()))
+    operador = raw_input( "[+] - Deseja ver Triggers com mais ou menos de {0} dias [ + / - ] ? ".format(tmp_trigger))
+
+    if operador == '+':
+        params['lastChangeTill'] = conversao
+    elif operador == '-':
+        params['lastChangeSince'] = conversao
+    else:
+        raw_input("\nPressione ENTER para voltar")
+        menu_relack()
+
+    rel_ack = zapi.trigger.get(params)
+    for relatorio in rel_ack:
+        lastchangeConverted = datetime.datetime.fromtimestamp(float(relatorio["lastchange"])).strftime('%Y-%m-%d %H:%M')
+        print ""
+        print colored("[-PROBLEM-]",'red'), "Trigger {} com {} de {} dias".format(label,operador,tmp_trigger)
+        print "=" * 80
+        print ""
+        print colored("[INFO]",'blue'), "Nome da Trigger: ", relatorio["description"],"| HOST:"+relatorio["hosts"][0]["host"]+" | ID:"+relatorio["hosts"][0]["hostid"]
+        print colored("[INFO]",'blue'), "Hora de alarme: ", lastchangeConverted
+        print colored("[INFO]",'blue'), "URL da trigger: {}/zabbix.php?action=problem.view&filter_set=1&filter_triggerids%5B%5D={}".format(server,relatorio["triggerid"])
+        print colored("[INFO]",'blue'), "Descrição da Trigger: ", relatorio["comments"]
+        print ""
+
+    print colored("\n[INFO]",'green'), "Total de {} triggers encontradas".format(rel_ack.__len__())
+    opcao = raw_input("\nDeseja gerar relatorio em arquivo? [s/n]")
+    if opcao == 's' or opcao == 'S':
+        with open("relatorio.csv" ,"w") as arquivo:
+            arquivo.write("Nome da Trigger,Hora de alarme:,URL da trigger:,Descrição da Trigger:\r\n ")
+            for relatorio in rel_ack:
+                arquivo.write((relatorio["description"]).encode('utf-8'))
+                arquivo.write(("| HOST:"+relatorio["hosts"][0]["host"]+" | ID:"+relatorio["hosts"][0]["hostid"]))
+                arquivo.write(",")
+                arquivo.write(lastchangeConverted)
+                arquivo.write(",")
+                arquivo.write("{}/zabbix.php?action=problem.view&filter_set=1&filter_triggerids%5B%5D={}".format(server,relatorio["triggerid"]))
+                arquivo.write(",")
+                arquivo.write(("\""+relatorio["comments"]+"\"").encode('utf-8'))
+                arquivo.write("\r\n")
+
+        raw_input("\nArquivo gerado com sucesso ! Pressione ENTER para voltar")
+        menu_relack()
+    else:   
+        raw_input("\nPressione ENTER para voltar")
+        menu_relack()
 
 def main():
     menu()
