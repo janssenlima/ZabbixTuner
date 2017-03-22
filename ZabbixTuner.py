@@ -135,9 +135,9 @@ def agentesDesatualizados():
         for x in itens:
             if x['lastvalue'] != versaoZabbixServer and x['lastvalue'] <= versaoZabbixServer:
                 print '{0:6} | {1:30}'.format(x["lastvalue"], x["hosts"][0]["host"])        
-                print ""
-                raw_input("Pressione ENTER para continuar")     
-                main()
+        print ""
+        raw_input("Pressione ENTER para continuar")     
+        main()
     
     except IndexError:
         print "Não foi possível obter a versão do agent no Zabbix Server."
