@@ -396,7 +396,7 @@ def menu_relack():
     print colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n" 
     "[+] - Zabbix Tuner faz um diagnóstico do seu ambiente e propõe melhorias na busca de um melhor desempenho - [+]\n"
     "[+] - Desenvolvido por Janssen Lima - [+]\n"
-    "[+] - Dúvidas/Sugestões envie e-mail para janssen@conectsys.com.br - [+]", 'blue')
+    "[+] - Dúvidas/Sugestões envie e-mail para janssenreislima@gmail.com - [+]", 'blue')
     print ""
     print colored("--- Escolha uma opção para o relatório ---",'yellow', attrs=['bold'])
     print ""
