@@ -32,7 +32,7 @@ except:
     print u"\n    Verifique se a URL " + colored (server, 'red', attrs=['bold']) + u" está disponível."
     print ""
     print colored('''
-    Desenvolvido por Janssen Lima - janssen@conectsys.com.br
+    Desenvolvido por Janssen Lima - janssenreislima@gmail.com
     ''', 'blue', attrs=['bold'])
     exit(0)
 
@@ -42,7 +42,7 @@ def menu():
     print colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n"
     "[+] - Zabbix Tuner faz um diagnóstico do seu ambiente e propõe melhorias na busca de um melhor desempenho - [+]\n"
     "[+] - Desenvolvido por Janssen Lima - [+]\n"
-    "[+] - Dúvidas/Sugestões envie e-mail para janssen@conectsys.com.br - [+]", 'blue')
+    "[+] - Dúvidas/Sugestões envie e-mail para janssenreislima@gmail.com - [+]", 'blue')
     print ""
     print colored("--- Escolha uma opção do menu ---",'yellow', attrs=['bold'])
     print ""
