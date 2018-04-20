@@ -30,4 +30,4 @@ $ ./ZabbixTuner.py
 
 ## Quer ajudar no projeto?
 Achou algum erro ou quer fazer uma sugestão para o projeto? <br>
-Cadastre uma Issue aqui mesmo no GitHub ou envie um e-mail para janssen@conectsys.com.br
+Cadastre uma Issue aqui mesmo no GitHub ou envie um e-mail para janssenreislima@gmail.com
