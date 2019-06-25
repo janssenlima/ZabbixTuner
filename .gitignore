@@ -1,3 +1,9 @@
+# Custom
+*.DS_Store
+*.local
+.idea/
+*.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

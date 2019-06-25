@@ -15,7 +15,7 @@ def read(fname):
 setup(
     name='zabbix-tuner',
     url='https://github.com/janssenlima/ZabbixTuner',
-    version='0.2',
+    version='0.3',
     license='GNU LGPL 2.1',
     author='Janssen dos Reis Lima',
     author_email='janssenreislima@gmail.com',
