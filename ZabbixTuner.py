@@ -205,6 +205,8 @@ def listagemItensNaoSuportados():
             
             raw_input("\nArquivo gerado com sucesso ! Pressione ENTER para voltar")
             main()
+        else:
+            main()
     else:
         print "Nenhum item 'não supotado' encontrado!!!"
         print ""
