@@ -3,6 +3,7 @@
 *.local
 .idea/
 *.csv
+zabbix-tuner/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

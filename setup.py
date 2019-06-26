@@ -13,23 +13,22 @@ def read(fname):
 
 
 setup(
-    name='zabbix-tuner',
+    name='Zabbix Tuner',
     url='https://github.com/janssenlima/ZabbixTuner',
     version='0.3',
     license='GNU LGPL 2.1',
     author='Janssen dos Reis Lima',
     author_email='janssenreislima@gmail.com',
-    description='Zabbix Tuner',
+    description='ZabbixTuner is a project that uses the Zabbix API that aims to verify a Zabbix installation and propose adjustments to improve system performance and stability.',
     py_modules=['ZabbixTuner'],
     packages=['conf'],
     include_package_data=True,
     zip_safe=False,
     platforms='any',
     keywords='zabbix api tuner tuning',
-    install_requires=['zabbix-api', 'termcolor'],
+    install_requires=['zabbix-api', 'termcolor', 'progressbar'],
     classifiers=[
-         'Programming Language :: Python',
          'Programming Language :: Python :: 2',
-         'Development Status :: 2 - Pre-Alpha',
+         'Development Status :: 5 - Production/Stable',
         ],
 )
