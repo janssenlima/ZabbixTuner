@@ -344,7 +344,7 @@ def menu_relack():
     print("[2] - Relatório de triggers com Unacknowledged")
     print("[3] - Relatório de triggers com ACK/UNACK")
     print()
-    print("[0] - Sair")
+    print("[0] - Voltar")
     print()
     menu_opcao_relack()
 
