@@ -13,14 +13,14 @@ from progressbar import ProgressBar, Percentage, ReverseBar, ETA, Timer, Rotatin
 from conf.zabbix import *
 
 def banner():
-    print colored('''
+    print(colored('''
     ______       ______ ______ _____            ________
     ___  /______ ___  /____  /____(_)___  __    ___  __/___  _____________________
     __  / _  __ `/_  __ \_  __ \_  /__  |/_/    __  /  _  / / /_  __ \  _ \_  ___/
     _  /__/ /_/ /_  /_/ /  /_/ /  / __>  <      _  /   / /_/ /_  / / /  __/  /
     /____/\__,_/ /_.___//_.___//_/  /_/|_|      /_/    \__,_/ /_/ /_/\___//_/
-    ''', 'red', attrs=['bold'])
-    print "" 
+    ''', 'red', attrs=['bold']))
+    print("") 
 
 try:
     zapi = ZabbixAPI(server=server, path="", timeout=timeout, log_level=loglevel)
@@ -28,37 +28,37 @@ try:
 except:
     os.system('clear')
     banner()
-    print colored('    Não foi possível conectar ao Zabbix Server.', 'yellow', attrs=['bold'])
-    print u"\n    Verifique se a URL " + colored(server, 'red', attrs=['bold']) + u" está disponível."
-    print ""
-    print colored('''
+    print(colored('    Não foi possível conectar ao Zabbix Server.', 'yellow', attrs=['bold']))
+    print(u"\n    Verifique se a URL " + colored(server, 'red', attrs=['bold']) + u" está disponível.")
+    print("")
+    print(colored('''
     Desenvolvido por Janssen Lima - janssenreislima@gmail.com
-    ''', 'blue', attrs=['bold'])
+    ''', 'blue', attrs=['bold']))
     exit(0)
 
 def menu():
     os.system('clear')
     banner()
-    print colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n"
+    print(colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n"
     "[+] - Zabbix Tuner faz um diagnóstico do seu ambiente e propõe melhorias na busca de um melhor desempenho - [+]\n"
     "[+] - Desenvolvido por Janssen Lima - [+]\n"
-    "[+] - Dúvidas/Sugestões envie e-mail para janssenreislima@gmail.com - [+]", 'blue')
-    print ""
-    print colored("--- Escolha uma opção do menu ---", 'yellow', attrs=['bold'])
-    print ""
-    print "[1] - Relatório de itens do sistema"
-    print "[2] - Listar itens não suportados"
-    print "[3] - Desabilitar itens não suportados"
-    print "[4] - Iniciar diagnóstico"
-    print "[5] - Relatório de Agentes Zabbix desatualizados"
-    print "[6] - Relatório de Triggers por tempo de alarme e estado"
-    print ""
-    print "[0] - Sair"
-    print ""
+    "[+] - Dúvidas/Sugestões envie e-mail para janssenreislima@gmail.com - [+]", 'blue'))
+    print()
+    print(colored("--- Escolha uma opção do menu ---", 'yellow', attrs=['bold']))
+    print()
+    print("[1] - Relatório de itens do sistema")
+    print("[2] - Listar itens não suportados")
+    print("[3] - Desabilitar itens não suportados")
+    print("[4] - Iniciar diagnóstico")
+    print("[5] - Relatório de Agentes Zabbix desatualizados")
+    print("[6] - Relatório de Triggers por tempo de alarme e estado")
+    print()
+    print("[0] - Sair")
+    print()
     menu_opcao()
 
 def menu_opcao():
-    opcao = raw_input("[+] - Selecione uma opção[0-7]: ")
+    opcao = input("[+] - Selecione uma opção[0-7]: ")
     if opcao == '1':
         dadosItens()
     elif opcao == '2':
@@ -85,23 +85,23 @@ def desabilitaItensNaoSuportados():
             "monitored": True
         }
 
-    filtro = raw_input('Qual a busca para key_? [NULL = ENTER]')
+    filtro = input('Qual a busca para key_? [NULL = ENTER]')
     if filtro.__len__() > 0:
         query['search'] = {'key_': filtro}
 
-    limite = raw_input('Qual o limite de itens? [NULL = ENTER]')
+    limite = input('Qual o limite de itens? [NULL = ENTER]')
     if limite.__len__() > 0:
         try:
             query['limit'] = int(limite)
         except:
-            print 'Limite invalido'
-            raw_input("Pressione ENTER para voltar")
+            print('Limite invalido')
+            input("Pressione ENTER para voltar")
             main()
 
-    opcao = raw_input("Confirma operação? [s/n]")
+    opcao = input("Confirma operação? [s/n]")
     if opcao == 's' or opcao == 'S':
         itens = zapi.item.get(query)
-        print 'Encontramos {} itens'.format(itens.__len__())
+        print('Encontramos {} itens'.format(itens.__len__()))
         bar = ProgressBar(maxval=itens.__len__(), widgets=[Percentage(), ReverseBar(), ETA(), RotatingMarker(), Timer()]).start()
         i = 0
         for x in itens:
@@ -109,9 +109,9 @@ def desabilitaItensNaoSuportados():
             i += 1
             bar.update(i)
         bar.finish()
-        print "Itens desabilitados!!!"
-        print ""
-        raw_input("Pressione ENTER para continuar")
+        print("Itens desabilitados!!!")
+        print()
+        input("Pressione ENTER para continuar")
     main()
 
 def agentesDesatualizados():
@@ -130,26 +130,26 @@ def agentesDesatualizados():
                                 "hostids": "10084"
                                 })[0]["lastvalue"]
     
-        print colored('{0:6} | {1:30}'.format("Versão", "Host"), attrs=['bold'])
+        print(colored('{0:6} | {1:30}'.format("Versão", "Host"), attrs=['bold']))
 
         for x in itens:
             if x['lastvalue'] != versaoZabbixServer and x['lastvalue'] <= versaoZabbixServer:
-                print '{0:6} | {1:30}'.format(x["lastvalue"], x["hosts"][0]["host"])
-        print ""
-        raw_input("Pressione ENTER para continuar")
+                print('{0:6} | {1:30}'.format(x["lastvalue"], x["hosts"][0]["host"]))
+        print()
+        input("Pressione ENTER para continuar")
         main()
     
     except IndexError:
-        print "Não foi possível obter a versão do agent no Zabbix Server."
-        raw_input("Pressione ENTER para continuar")
+        print("Não foi possível obter a versão do agent no Zabbix Server.")
+        input("Pressione ENTER para continuar")
         main()
     
 def diagnosticoAmbiente():
-    print colored("[+++]", 'green'), "analisando itens não númericos"
+    print(colored("[+++]", 'green'), "analisando itens não númericos")
     itensNaoNumericos = zapi.item.get({"output": "extend", "monitored": True,
         "filter": {"value_type": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]},
         "countOutput": True})
-    print colored("[+++]", 'green'), "analisando itens ICMPPING com histórico acima de 7 dias"
+    print(colored("[+++]", 'green'), "analisando itens ICMPPING com histórico acima de 7 dias")
     itensPing = zapi.item.get({"output": "extend", "monitored": True, "filter": {"key_": "icmpping"}})
     
     contPing = 0
@@ -162,14 +162,14 @@ def diagnosticoAmbiente():
         if dias > 7:
             contPing += 1
     
-    print ""
-    print colored("Resultado do diagnóstico:", attrs=['bold'])
-    print colored("[INFO]",
-                  'blue'), "Quantidade de itens com chave icmpping armazenando histórico por mais de 7 dias:", contPing
-    print colored("[WARN]", 'yellow', None,
-                  attrs=['blink']), "Quantidade de itens não numéricos (ativos): ", itensNaoNumericos
-    print ""
-    raw_input("Pressione ENTER para continuar")
+    print()
+    print(colored("Resultado do diagnóstico:", attrs=['bold']))
+    print(colored("[INFO]",
+                  'blue'), "Quantidade de itens com chave icmpping armazenando histórico por mais de 7 dias:", contPing)
+    print(colored("[WARN]", 'yellow', None,
+                  attrs=['blink']), "Quantidade de itens não numéricos (ativos): ", itensNaoNumericos)
+    print()
+    input("Pressione ENTER para continuar")
     main()
         
 def listagemItensNaoSuportados():
@@ -184,9 +184,9 @@ def listagemItensNaoSuportados():
          "monitored": True, "selectHosts": ["hostid", "host"]})
     
     if itensNaoSuportados:
-        print colored("\n[INFO]", 'green'), "Total de {} itens não suportados encontrados".format(
-            itensNaoSuportados.__len__())
-        opcao = raw_input("\nDeseja gerar relatorio em arquivo? [s/n]")
+        print(colored("\n[INFO]", 'green'), "Total de {} itens não suportados encontrados".format(
+                itensNaoSuportados.__len__()))
+        opcao = input("\nDeseja gerar relatorio em arquivo? [s/n]")
         if opcao == 's' or opcao == 'S':
             with open("relatorio_itens_nao_suportados.csv", "w") as arquivo:
                 arquivo.write("Item,Tipo,Nome,Error,Host\r\n")
@@ -203,14 +203,14 @@ def listagemItensNaoSuportados():
                     arquivo.write(relatorio["hosts"][0]["host"])
                     arquivo.write("\r\n")
             
-            raw_input("\nArquivo gerado com sucesso ! Pressione ENTER para voltar")
+            input("\nArquivo gerado com sucesso ! Pressione ENTER para voltar")
             main()
         else:
             main()
     else:
-        print "Nenhum item 'não supotado' encontrado!!!"
-        print ""
-        raw_input("Pressione ENTER para continuar")
+        print("Nenhum item 'não suportado' encontrado!!!")
+        print()
+        input("Pressione ENTER para continuar")
         main()
 
 def dadosItens():
@@ -291,66 +291,66 @@ def dadosItens():
     
     itensHTTP = zapi.item.get(
         {"output": "extend", "filter": {"type": 19}, "templated": False, "countOutput": True, "monitored": True})
-    print ""
-    print "Relatório de itens"
-    print "=" * 18
-    print ""
-    print colored("[INFO]", 'blue'), "Total de itens: ", int(totalItensHabilitados) + int(itensDesabilitados) + int(
-        itensNaoSuportados)
-    print colored("[INFO]", 'blue'), "Itens habilitados: ", totalItensHabilitados
-    print colored("[INFO]", 'blue'), "Itens desabilitados: ", itensDesabilitados
+    print()
+    print("Relatório de itens")
+    print("=" * 18)
+    print()
+    print(colored("[INFO]", 'blue'), "Total de itens: ", int(totalItensHabilitados) + int(itensDesabilitados) + int(
+        itensNaoSuportados))
+    print(colored("[INFO]", 'blue'), "Itens habilitados: ", totalItensHabilitados)
+    print(colored("[INFO]", 'blue'), "Itens desabilitados: ", itensDesabilitados)
     if itensNaoSuportados > "0":
-        print colored("[ERRO]", 'red'), "Itens não suportados: ", itensNaoSuportados
+        print(colored("[ERRO]", 'red'), "Itens não suportados: ", itensNaoSuportados)
     else:
-        print colored("[-OK-]", 'green'), "Itens não suportados: ", itensNaoSuportados
-    print ""
-    print "Itens por tipo em monitoramento"
-    print "=" * 31
-    print colored("[INFO]", 'blue'), "Zabbix Agent (passivo): ", itensZabbixAgent
-    print colored("[INFO]", 'blue'), "Zabbix Agent (ativo): ", itensZabbixAgentAtivo
-    print colored("[INFO]", 'blue'), "Zabbix Trapper: ", itensZabbixTrapper
-    print colored("[INFO]", 'blue'), "Zabbix Interno: ", itensZabbixInterno
-    print colored("[INFO]", 'blue'), "Zabbix Agregado: ", itensZabbixAggregate
-    print colored("[INFO]", 'blue'), "SNMPv1: ", itensSNMPv1
-    print colored("[INFO]", 'blue'), "SNMPv2: ", itensSNMPv2
-    print colored("[INFO]", 'blue'), "SNMPv3: ", itensSNMPv3
-    print colored("[INFO]", 'blue'), "SNMNP Trap: ", itensSNMPTrap
-    print colored("[INFO]", 'blue'), "JMX: ", itensJMX
-    print colored("[INFO]", 'blue'), "IPMI: ", itensIPMI
-    print colored("[INFO]", 'blue'), "SSH: ", itensSSH
-    print colored("[INFO]", 'blue'), "Telnet: ", itensTelnet
-    print colored("[INFO]", 'blue'), "Web: ", itensWeb
-    print colored("[INFO]", 'blue'), "Checagem Simples: ", itensChecagemSimples
-    print colored("[INFO]", 'blue'), "Calculado: ", itensCalculado
-    print colored("[INFO]", 'blue'), "Checagem Externa: ", itensExterno
-    print colored("[INFO]", 'blue'), "Database: ", itensDatabase
-    print colored("[INFO]", 'blue'), "Itens dependentes: ", itensDependentes
-    print colored("[INFO]", 'blue'), "HTTP: ", itensHTTP
-    print ""
-    raw_input("Pressione ENTER para continuar")
+        print(colored("[-OK-]", 'green'), "Itens não suportados: ", itensNaoSuportados)
+    print()
+    print("Itens por tipo em monitoramento")
+    print("=" * 31)
+    print(colored("[INFO]", 'blue'), "Zabbix Agent (passivo): ", itensZabbixAgent)
+    print(colored("[INFO]", 'blue'), "Zabbix Agent (ativo): ", itensZabbixAgentAtivo)
+    print(colored("[INFO]", 'blue'), "Zabbix Trapper: ", itensZabbixTrapper)
+    print(colored("[INFO]", 'blue'), "Zabbix Interno: ", itensZabbixInterno)
+    print(colored("[INFO]", 'blue'), "Zabbix Agregado: ", itensZabbixAggregate)
+    print(colored("[INFO]", 'blue'), "SNMPv1: ", itensSNMPv1)
+    print(colored("[INFO]", 'blue'), "SNMPv2: ", itensSNMPv2)
+    print(colored("[INFO]", 'blue'), "SNMPv3: ", itensSNMPv3)
+    print(colored("[INFO]", 'blue'), "SNMNP Trap: ", itensSNMPTrap)
+    print(colored("[INFO]", 'blue'), "JMX: ", itensJMX)
+    print(colored("[INFO]", 'blue'), "IPMI: ", itensIPMI)
+    print(colored("[INFO]", 'blue'), "SSH: ", itensSSH)
+    print(colored("[INFO]", 'blue'), "Telnet: ", itensTelnet)
+    print(colored("[INFO]", 'blue'), "Web: ", itensWeb)
+    print(colored("[INFO]", 'blue'), "Checagem Simples: ", itensChecagemSimples)
+    print(colored("[INFO]", 'blue'), "Calculado: ", itensCalculado)
+    print(colored("[INFO]", 'blue'), "Checagem Externa: ", itensExterno)
+    print(colored("[INFO]", 'blue'), "Database: ", itensDatabase)
+    print(colored("[INFO]", 'blue'), "Itens dependentes: ", itensDependentes)
+    print(colored("[INFO]", 'blue'), "HTTP: ", itensHTTP)
+    print()
+    input("Pressione ENTER para continuar")
     main()
 
 def menu_relack():
     os.system('clear')
     banner()
-    print colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n" 
+    print(colored("[+] - Bem-vindo ao ZABBIX TUNER - [+]\n" 
     "[+] - Zabbix Tuner faz um diagnóstico do seu ambiente e propõe melhorias na busca de um melhor desempenho - [+]\n"
     "[+] - Desenvolvido por Janssen Lima - [+]\n"
-    "[+] - Dúvidas/Sugestões envie e-mail para janssenreislima@gmail.com - [+]", 'blue')
-    print ""
-    print colored("--- Escolha uma opção para o relatório ---", 'yellow', attrs=['bold'])
-    print ""
-    print "[1] - Relatório de triggers com Acknowledged"
-    print "[2] - Relatório de triggers com Unacknowledged"
-    print "[3] - Relatório de triggers com ACK/UNACK"
-    print ""
-    print "[0] - Sair"
-    print ""
+    "[+] - Dúvidas/Sugestões envie e-mail para janssenreislima@gmail.com - [+]", 'blue'))
+    print()
+    print(colored("--- Escolha uma opção para o relatório ---", 'yellow', attrs=['bold']))
+    print()
+    print("[1] - Relatório de triggers com Acknowledged")
+    print("[2] - Relatório de triggers com Unacknowledged")
+    print("[3] - Relatório de triggers com ACK/UNACK")
+    print()
+    print("[0] - Sair")
+    print()
     menu_opcao_relack()
 
 def menu_opcao_relack():
 
-    opcao = raw_input("[+] - Selecione uma opção[0-3]: ")
+    opcao = input("[+] - Selecione uma opção[0-3]: ")
 
     params = {'output': ['triggerid', 'lastchange', 'comments', 'description'], 'selectHosts': ['hostid', 'host'], 'expandDescription': True, 'only_true': True, 'active': True}
     if opcao == '1':
@@ -364,42 +364,42 @@ def menu_opcao_relack():
     elif opcao == '0':
         main()
     else:
-        raw_input("\nPressione ENTER para voltar")
+        input("\nPressione ENTER para voltar")
         menu_relack()
 
     hoje = datetime.date.today()
     try:
-        tmp_trigger = int(raw_input("[+] - Selecione qual o tempo de alarme (dias): "))
-    except Exception, e:
-        raw_input("\nPressione ENTER para voltar")
+        tmp_trigger = int(input("[+] - Selecione qual o tempo de alarme (dias): "))
+    except(Exception, e):
+        input("\nPressione ENTER para voltar")
         menu_relack()
     dt = (hoje - datetime.timedelta(days=tmp_trigger))
     conversao = int(time.mktime(dt.timetuple()))
-    operador = raw_input( "[+] - Deseja ver Triggers com mais ou menos de {0} dias [ + / - ] ? ".format(tmp_trigger))
+    operador = input( "[+] - Deseja ver Triggers com mais ou menos de {0} dias [ + / - ] ? ".format(tmp_trigger))
 
     if operador == '+':
         params['lastChangeTill'] = conversao
     elif operador == '-':
         params['lastChangeSince'] = conversao
     else:
-        raw_input("\nPressione ENTER para voltar")
+        input("\nPressione ENTER para voltar")
         menu_relack()
 
     rel_ack = zapi.trigger.get(params)
     for relatorio in rel_ack:
         lastchangeConverted = datetime.datetime.fromtimestamp(float(relatorio["lastchange"])).strftime('%Y-%m-%d %H:%M')
-        print ""
-        print colored("[-PROBLEM-]", 'red'), "Trigger {} com {} de {} dias".format(label, operador, tmp_trigger)
-        print "=" * 80
-        print ""
-        print colored("[INFO]", 'blue'), "Nome da Trigger: ", relatorio["description"], "| HOST:"+relatorio["hosts"][0]["host"]+" | ID:"+relatorio["hosts"][0]["hostid"]
-        print colored("[INFO]", 'blue'), "Hora de alarme: ", lastchangeConverted
-        print colored("[INFO]", 'blue'), "URL da trigger: {}/zabbix.php?action=problem.view&filter_set=1&filter_triggerids%5B%5D={}".format(server, relatorio["triggerid"])
-        print colored("[INFO]", 'blue'), "Descrição da Trigger: ", relatorio["comments"]
-        print ""
+        print()
+        print(colored("[-PROBLEM-]", 'red'), "Trigger {} com {} de {} dias".format(label, operador, tmp_trigger))
+        print("=" * 80)
+        print()
+        print(colored("[INFO]", 'blue'), "Nome da Trigger: ", relatorio["description"], "| HOST:"+relatorio["hosts"][0]["host"]+" | ID:"+relatorio["hosts"][0]["hostid"])
+        print(colored("[INFO]", 'blue'), "Hora de alarme: ", lastchangeConverted)
+        print(colored("[INFO]", 'blue'), "URL da trigger: {}/zabbix.php?action=problem.view&filter_set=1&filter_triggerids%5B%5D={}".format(server, relatorio["triggerid"]))
+        print(colored("[INFO]", 'blue'), "Descrição da Trigger: ", relatorio["comments"])
+        print()
 
-    print colored("\n[INFO]", 'green'), "Total de {} triggers encontradas".format(rel_ack.__len__())
-    opcao = raw_input("\nDeseja gerar relatorio em arquivo? [s/n]")
+    print(colored("\n[INFO]", 'green'), "Total de {} triggers encontradas".format(rel_ack.__len__()))
+    opcao = input("\nDeseja gerar relatorio em arquivo? [s/n]")
     if opcao == 's' or opcao == 'S':
         with open("relatorio_triggers.csv", "w") as arquivo:
             arquivo.write("Nome da Trigger,Hora de alarme:,URL da trigger:,Descrição da Trigger:\r\n ")
@@ -414,10 +414,10 @@ def menu_opcao_relack():
                 arquivo.write(("\""+relatorio["comments"]+"\"").encode('utf-8'))
                 arquivo.write("\r\n")
 
-        raw_input("\nArquivo gerado com sucesso ! Pressione ENTER para voltar")
+        input("\nArquivo gerado com sucesso ! Pressione ENTER para voltar")
         menu_relack()
     else:   
-        raw_input("\nPressione ENTER para voltar")
+        input("\nPressione ENTER para voltar")
         menu_relack()
 
 
