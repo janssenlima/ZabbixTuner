@@ -12,6 +12,18 @@ $ git clone https://github.com/janssenlima/ZabbixTuner
 $ cd ZabbixTuner
 $ sudo pip install -r requirements.txt
 ```
+### Instalação com venv no python3
+
+```sh
+$ sudo apt-get install python-pip git
+
+$ git clone https://github.com/janssenlima/ZabbixTuner
+$ cd ZabbixTuner
+$ python -m venv ./venv
+$ source ./venv/bin/activate
+$ pip install -r requirements.txt
+$ ./ZabbixTuner.py
+```
 
 ## Configurar parâmetros de conexão do Zabbix
 
